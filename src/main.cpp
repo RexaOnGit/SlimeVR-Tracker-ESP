@@ -71,27 +71,34 @@ void setup()
 
     SerialCommands::setUp();
 
-#if IMU == IMU_MPU6500 || IMU == IMU_MPU6050 || IMU == IMU_MPU9250 || IMU == IMU_BNO055 || IMU == IMU_ICM20948
-    I2CSCAN::clearBus(PIN_IMU_SDA, PIN_IMU_SCL); // Make sure the bus isn't stuck when resetting ESP without powering it down
-    // Fixes I2C issues for certain IMUs. Only has been tested on IMUs above. Testing advised when adding other IMUs.
-#endif
-    // join I2C bus
+#if IMU_COM_PROTOCOL == I2C_COM
+    #if IMU == IMU_MPU6500 || IMU == IMU_MPU6050 || IMU == IMU_MPU9250 || IMU == IMU_BNO055 || IMU == IMU_ICM20948
+        I2CSCAN::clearBus(PIN_IMU_SDA, PIN_IMU_SCL); // Make sure the bus isn't stuck when resetting ESP without powering it down
+        // Fixes I2C issues for certain IMUs. Only has been tested on IMUs above. Testing advised when adding other IMUs.
+    #endif
+        // join I2C bus
 
-#if ESP32
-    // For some unknown reason the I2C seem to be open on ESP32-C3 by default. Let's just close it before opening it again. (The ESP32-C3 only has 1 I2C.)
-    Wire.end();
-#endif
+    #if ESP32
+        // For some unknown reason the I2C seem to be open on ESP32-C3 by default. Let's just close it before opening it again. (The ESP32-C3 only has 1 I2C.)
+        Wire.end();
+    #endif
 
     // using `static_cast` here seems to be better, because there are 2 similar function signatures
-    Wire.begin(static_cast<int>(PIN_IMU_SDA), static_cast<int>(PIN_IMU_SCL)); 
+    Wire.begin(static_cast<int>(PIN_IMU_SDA), static_cast<int>(PIN_IMU_SCL));
 
-#ifdef ESP8266
-    Wire.setClockStretchLimit(150000L); // Default stretch limit 150mS
+    #ifdef ESP8266
+        Wire.setClockStretchLimit(150000L); // Default stretch limit 150mS
+    #endif
+    #ifdef ESP32 // Counterpart on ESP32 to ClockStretchLimit
+        Wire.setTimeOut(150);
+    #endif
+        Wire.setClock(I2C_SPEED);
+#elif IMU_COM_PROTOCOL == SPI_COM
+    //set all the slave select pins high to force devices into SPI mode
+    digitalWrite(PIN_IMU_SS1, HIGH);
+    digitalWrite(PIN_IMU_SS2, HIGH);
+    digitalWrite(PIN_IMU_SS3, HIGH);
 #endif
-#ifdef ESP32 // Counterpart on ESP32 to ClockStretchLimit
-    Wire.setTimeOut(150);
-#endif
-    Wire.setClock(I2C_SPEED);
 
     // Wait for IMU to boot
     delay(500);

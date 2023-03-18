@@ -26,6 +26,7 @@ THE SOFTWARE.
 */
 #include "BMI160.h"
 #include "I2Cdev.h"
+#include <SPI.h>
 
 #define BMI160_CHIP_ID 0xD1
 
@@ -36,8 +37,30 @@ THE SOFTWARE.
 #define BMI160_SIGN_EXTEND(val, from) \
     (((val) & (1 << ((from) - 1))) ? (val | (((1 << (1 + (sizeof(val) << 3) - (from))) - 1) << (from))) : val)
 
-
 /******************************************************************************/
+
+// add class for SPI communication
+
+class SPIdevMod {
+    public:
+        static word write(uint8_t selectPin, word message) {
+            SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
+            digitalWrite(selectPin, LOW);
+            word response = SPI.transfer(message);
+            digitalWrite(selectPin, HIGH);
+            SPI.endTransaction();
+            return response;
+        }
+        static byte read(uint8_t selectPin, byte message) {
+            SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
+            digitalWrite(selectPin, LOW);
+            byte response = SPI.transfer(message);
+            digitalWrite(selectPin, HIGH);
+            SPI.endTransaction();
+            return response;
+        }
+};
+
 
 class I2CdevMod : public I2Cdev {
     public:
