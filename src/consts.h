@@ -34,6 +34,9 @@
 #define IMU_BMI160 8
 #define IMU_ICM20948 9
 
+#define SPI_COM 1
+#define I2C_COM 2
+
 #define BOARD_SLIMEVR_LEGACY 1
 #define BOARD_SLIMEVR_DEV 2
 #define BOARD_NODEMCU 3
