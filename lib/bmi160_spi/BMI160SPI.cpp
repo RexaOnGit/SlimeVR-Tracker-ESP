@@ -51,10 +51,10 @@ class SPIdevMod {
             SPI.endTransaction();
             return response;
         }
-        static byte read(uint8_t selectPin, byte message) {
+        static byte read(uint8_t selectPin, byte address) {
             SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
             digitalWrite(selectPin, LOW);
-            byte response = SPI.transfer(message);
+            byte response = SPI.transfer(address);
             digitalWrite(selectPin, HIGH);
             SPI.endTransaction();
             return response;
@@ -103,11 +103,11 @@ void BMI160::initialize(uint8_t addr)
     delay(1);
 
     /* Power up the accelerometer */
-    I2CdevMod::writeByte(devAddr, BMI160_RA_CMD, BMI160_CMD_ACC_MODE_NORMAL);
+    SPIdevMod::write(devAddr, BMI160_RA_CMD, BMI160_CMD_ACC_MODE_NORMAL);
     delay(BMI160_ACCEL_POWERUP_DELAY_MS);
 
     /* Power up the gyroscope */
-    I2CdevMod::writeByte(devAddr, BMI160_RA_CMD, BMI160_CMD_GYR_MODE_NORMAL);
+    SPIdevMod::write(devAddr, BMI160_RA_CMD, BMI160_CMD_GYR_MODE_NORMAL);
     delay(BMI160_GYRO_POWERUP_DELAY_MS);
 
     setGyroRate(BMI160_GYRO_RATE_800HZ);
