@@ -96,23 +96,13 @@
     #define BATTERY_SHIELD_R2 40.2
   #endif
 #elif BOARD == BOARD_NODEMCU || BOARD == BOARD_WEMOSD1MINI
-  #if IMU_COM_PROTOCOL == SPI_COM
-    #define PIN_IMU_SS1 D8
-    #define PIN_IMU_SS2 D10
-    #define PIN_IMU_SS3 D3
-    #define PIN_IMU_SDA 0
-    #define PIN_IMU_SCL 0
-    #define PIN_IMU_INT 0
-    #define PIN_IMU_INT_2 0
-  #elif IMU_COM_PROTOCOL == IC2_COM
-    #define PIN_IMU_SS1 0
-    #define PIN_IMU_SS2 0
-    #define PIN_IMU_SS3 0
-    #define PIN_IMU_SDA D2
-    #define PIN_IMU_SCL D1
-    #define PIN_IMU_INT D5
-    #define PIN_IMU_INT_2 D6
-  #endif
+  #define PIN_IMU_SS1 D8
+  #define PIN_IMU_SS2 D10
+  #define PIN_IMU_SS3 D3
+  #define PIN_IMU_SDA D2
+  #define PIN_IMU_SCL D1
+  #define PIN_IMU_INT D5
+  #define PIN_IMU_INT_2 D6
   #define PIN_BATTERY_LEVEL A0
 //  #define LED_PIN 2
 //  #define LED_INVERTED true
