@@ -122,11 +122,6 @@ void BMI160::initialize(uint8_t addr)
     delay(1);
     setAccelDLPFMode(BMI160_DLPF_MODE_OSR4);
     delay(1);
-
-    /* Only PIN1 interrupts currently supported - map all interrupts to PIN1 */
-    I2CdevMod::writeByte(devAddr, BMI160_RA_INT_MAP_0, 0xFF);
-    I2CdevMod::writeByte(devAddr, BMI160_RA_INT_MAP_1, 0xF0);
-    I2CdevMod::writeByte(devAddr, BMI160_RA_INT_MAP_2, 0x00);
 }
 
 /** Get Device ID.
