@@ -43,6 +43,11 @@ THE SOFTWARE.
 
 class SPIdevMod {
     public:
+        /** Write a 16 bit word to the device.
+        * This will select a 1 byte address and send a 1 byte message to it.
+        * First bit must be 0 (MSBF)
+        * @returns 16 bit word (should be empty)
+        */
         static word write(uint8_t selectPin, byte address, byte data) {
             SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
             digitalWrite(selectPin, LOW);
@@ -51,6 +56,11 @@ class SPIdevMod {
             SPI.endTransaction();
             return response;
         }
+        /** Read 1 byte from the device.
+        * This will select a 1 byte address and listen for a 1 byte message.
+        * First bit must be 1 (MSBF)
+        * @returns 1 byte message
+        */
         static byte read(uint8_t selectPin, byte address) {
             SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
             digitalWrite(selectPin, LOW);
@@ -130,8 +140,7 @@ void BMI160::initialize(uint8_t addr)
  * @see BMI160_RA_CHIP_ID
  */
 uint8_t BMI160::getDeviceID() {
-    I2CdevMod::readByte(devAddr, BMI160_RA_CHIP_ID, buffer);
-    return buffer[0];
+    return SPIdevMod::read(devAddr, (0x80 + BMI160_RA_CHIP_ID)); // must add 0x80 to signal read mode
 }
 
 /** Verify the SPI connection.
@@ -150,9 +159,10 @@ bool BMI160::testConnection()
  * @see BMI160_RA_GYRO_CONF
  */
 void BMI160::setGyroRate(uint8_t rate) {
-    I2CdevMod::writeBits(devAddr, BMI160_RA_GYRO_CONF,
-                   BMI160_GYRO_RATE_SEL_BIT,
-                   BMI160_GYRO_RATE_SEL_LEN, rate);
+    SPIdevMod::write(devAddr, BMI160_RA_GYRO_CONF, 
+                        //BMI160_GYRO_RATE_SEL_BIT,
+                        //BMI160_GYRO_RATE_SEL_LEN,
+                        rate);
 }
 
 /** Set accelerometer output data rate.
@@ -161,9 +171,10 @@ void BMI160::setGyroRate(uint8_t rate) {
  * @see BMI160_RA_ACCEL_CONF
  */
 void BMI160::setAccelRate(uint8_t rate) {
-    I2CdevMod::writeBits(devAddr, BMI160_RA_ACCEL_CONF,
-                   BMI160_ACCEL_RATE_SEL_BIT,
-                   BMI160_ACCEL_RATE_SEL_LEN, rate);
+    SPIdevMod::write(devAddr, BMI160_RA_ACCEL_CONF, 
+                        //BMI160_ACCEL_RATE_SEL_BIT,
+                        //BMI160_ACCEL_RATE_SEL_LEN,
+                        rate);
 }
 
 /** Set gyroscope digital low-pass filter configuration.
