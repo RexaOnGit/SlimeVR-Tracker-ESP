@@ -24,6 +24,7 @@
 #include "Wire.h"
 #include "ota.h"
 #include "sensors/SensorManager.h"
+#include "sensors_spi/SensorManagerSPI.h"
 #include "configuration/Configuration.h"
 #include "network/network.h"
 #include "globals.h"
@@ -36,7 +37,11 @@
 #include "logging/Logger.h"
 
 SlimeVR::Logging::Logger logger("SlimeVR");
-SlimeVR::Sensors::SensorManager sensorManager;
+#if IMU_COM_PROTOCOL == SPI_COM
+    SlimeVR::Sensors::SensorManagerSPI sensorManager;
+#else
+    SlimeVR::Sensors::SensorManager sensorManager;
+#endif
 SlimeVR::LEDManager ledManager(LED_PIN);
 SlimeVR::Status::StatusManager statusManager;
 SlimeVR::Configuration::Configuration configuration;
@@ -92,7 +97,7 @@ void setup()
     #ifdef ESP32 // Counterpart on ESP32 to ClockStretchLimit
         Wire.setTimeOut(150);
     #endif
-        Wire.setClock(I2C_SPEED);
+    Wire.setClock(I2C_SPEED);
 #elif IMU_COM_PROTOCOL == SPI_COM
     //set all the slave select pins high to force devices into SPI mode
     digitalWrite(PIN_IMU_SS1, HIGH);

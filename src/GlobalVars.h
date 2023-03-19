@@ -28,10 +28,12 @@
 #include "status/StatusManager.h"
 #include "configuration/Configuration.h"
 #include "sensors/SensorManager.h"
+#include "sensors_spi/SensorManagerSPI.h"
 
 extern SlimeVR::LEDManager ledManager;
 extern SlimeVR::Status::StatusManager statusManager;
 extern SlimeVR::Configuration::Configuration configuration;
 extern SlimeVR::Sensors::SensorManager sensorManager;
+extern SlimeVR::Sensors::SensorManagerSPI sensorManagerSPI;
 
 #endif
