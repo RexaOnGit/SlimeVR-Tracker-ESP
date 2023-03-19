@@ -43,10 +43,10 @@ THE SOFTWARE.
 
 class SPIdevMod {
     public:
-        static word write(uint8_t selectPin, word message) {
+        static word write(uint8_t selectPin, byte address, byte data) {
             SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
             digitalWrite(selectPin, LOW);
-            word response = SPI.transfer(message);
+            word response = SPI.transfer(word(address, data));
             digitalWrite(selectPin, HIGH);
             SPI.endTransaction();
             return response;
@@ -99,7 +99,7 @@ void BMI160::initialize(uint8_t addr)
 {
     devAddr = addr;
     /* Issue a soft-reset to bring the device into a clean state */
-    I2CdevMod::writeByte(devAddr, BMI160_RA_CMD, BMI160_CMD_SOFT_RESET);
+    SPIdevMod::write(devAddr, BMI160_RA_CMD, BMI160_CMD_SOFT_RESET);
     delay(1);
 
     /* Power up the accelerometer */
