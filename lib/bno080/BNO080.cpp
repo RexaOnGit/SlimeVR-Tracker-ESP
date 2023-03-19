@@ -158,7 +158,7 @@ boolean BNO080::beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_I
 	waitForSPI();
 	if (receivePacket() == true)
 	{
-		if (shtpData[0] == SHTP_REPORT_PRODUCT_ID_RESPONSE)
+		if (shtpData[0] == SHTP_REPORT_PRODUCT_ID_RESPONSE) {
 			if (_printDebug == true)
 			{
 				_debugPort->print(F("SW Version Major: 0x"));
@@ -175,7 +175,8 @@ boolean BNO080::beginSPI(uint8_t user_CSPin, uint8_t user_WAKPin, uint8_t user_I
 				_debugPort->print(F(" SW Version Patch: 0x"));
 				_debugPort->println(SW_Version_Patch, HEX);
 			}
-			return (true);
+		return (true);
+		}
 	}
 
 	return (false); //Something went wrong
