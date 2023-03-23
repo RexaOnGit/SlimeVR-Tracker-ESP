@@ -24,7 +24,7 @@
 #include "Wire.h"
 #include "ota.h"
 #include "sensors/SensorManager.h"
-#include "sensors_spi/SensorManagerSPI.h"
+#include "sensors/SensorManagerSPI.h"
 #include "configuration/Configuration.h"
 #include "network/network.h"
 #include "globals.h"
@@ -100,9 +100,9 @@ void setup()
     Wire.setClock(I2C_SPEED);
 #elif IMU_COM_PROTOCOL == SPI_COM
     //set all the slave select pins high to force devices into SPI mode
-    digitalWrite(PIN_IMU_SS1, HIGH);
-    digitalWrite(PIN_IMU_SS2, HIGH);
-    digitalWrite(PIN_IMU_SS3, HIGH);
+    for (uint8_t pin : PIN_IMU_SELECT_LIST) {
+        digitalWrite(pin, HIGH);
+    }
 #endif
 
     // Wait for IMU to boot
@@ -125,7 +125,11 @@ void loop()
 {
     SerialCommands::update();
     OTA::otaUpdate();
-    Network::update(sensorManager.getFirst(), sensorManager.getSecond());
+    Sensor *sensors = sensorManager.getSensors();
+    for (int i = 0; i < MAX_IMU_COUNT; i++) {
+        Sensor sensor = sensors[i];
+        Network::update(sensor);
+    }
     sensorManager.update();
     battery.Loop();
     ledManager.update();
