@@ -24,13 +24,13 @@
 #include "SensorManagerSPI.h"
 #include <SPI.h>
 #include "network/network.h"
-// #include "bno055sensor.h"
-// #include "bno080sensor.h"
-// #include "mpu9250sensor.h"
-// #include "mpu6050sensor.h"
-#include "sensors/bmi160sensor.h"
-// #include "icm20948sensor.h"
-#include "sensors/ErroneousSensor.h"
+#include "bno055sensor.h"
+#include "bno080sensor.h"
+#include "mpu9250sensor.h"
+#include "mpu6050sensor.h"
+#include "bmi160sensor.h"
+#include "icm20948sensor.h"
+#include "ErroneousSensor.h"
 
 namespace SlimeVR
 {
@@ -41,9 +41,9 @@ namespace SlimeVR
             {
 
 //check what SPI devices exist
-int ssPins[] = {PIN_IMU_SS1, PIN_IMU_SS2, PIN_IMU_SS3};
-byte IMUIDs[] = {0,0,0};
-for (int i = 0; i <= 2; i++) {
+int ssPins[] = PIN_IMU_SELECT_LIST;
+byte IMUIDs[MAX_IMU_COUNT];
+for (int i = 0; i < MAX_IMU_COUNT; i++) {
     byte response = 0;
     SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
     digitalWrite(ssPins[i], LOW);
@@ -61,55 +61,37 @@ for (int i = 0; i <= 2; i++) {
     #error Unsupported IMU
     #endif
 }
-if (IMUIDs[0] == 0) {
-    m_Logger.debug("No IMU connected at position 1");
+//step through each device ID, creating a new sensor object for each valid one
+for (int i = 0; i < MAX_IMU_COUNT; i++) {
+    byte thisID = IMUIDs[i];
+    if (thisID == 0) {
+        m_Logger.debug("No IMU connected at position " + (i+1));
+    }
+    else if (thisID == -1) {
+        m_Sensors[i] = new ErroneousSensor(0, IMU);
+    }
+    else {
+        m_Sensors[i] = new BMI160Sensor(0, (i+1), IMU_ROTATION);
+    }
+    m_Sensors[i]->motionSetup();
 }
-else if (IMUIDs[0] == -1) {
-    m_Sensor1 = new ErroneousSensor(0, IMU);
-}
-else {
-    m_Sensor1 = new BMI160Sensor(0, 1, IMU_ROTATION);
-}
-m_Sensor1->motionSetup();
-
-if (IMUIDs[1] == 0) {
-    m_Logger.debug("No IMU connected at position 1");
-}
-else if (IMUIDs[0] == -1) {
-    m_Sensor2 = new ErroneousSensor(0, IMU);
-}
-else {
-    m_Sensor2 = new BMI160Sensor(0, 2, IMU_ROTATION);
-}
-m_Sensor2->motionSetup();
-
-if (IMUIDs[2] == 0) {
-    m_Logger.debug("No IMU connected at position 1");
-}
-else if (IMUIDs[0] == -1) {
-    m_Sensor3 = new ErroneousSensor(0, IMU);
-}
-else {
-    m_Sensor3 = new BMI160Sensor(0, 3, IMU_ROTATION);
-}
-m_Sensor3->motionSetup();
 
             }
         }
 
         void SensorManagerSPI::postSetup()
         {
-            m_Sensor1->postSetup();
-            m_Sensor2->postSetup();
-            m_Sensor3->postSetup();
+            for (Sensor *i : m_Sensors) {
+                i->postSetup();
+            }
         }
 
         void SensorManagerSPI::update()
         {
             // Gather IMU data
-            m_Sensor1->motionLoop();
-            m_Sensor2->motionLoop();
-            m_Sensor3->motionLoop();
+            for (Sensor *i : m_Sensors) {
+                i->motionLoop();
+            }
 
             if (!ServerConnection::isConnected())
             {
@@ -117,9 +99,9 @@ m_Sensor3->motionSetup();
             }
 
             // Send updates
-            m_Sensor1->sendData();
-            m_Sensor2->sendData();
-            m_Sensor3->sendData();
+            for (Sensor *i : m_Sensors) {
+                i->sendData();
+            }
         }
     }
 }

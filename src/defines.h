@@ -62,6 +62,8 @@
 
 // Board-specific configurations
 #if BOARD == BOARD_SLIMEVR
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 14
   #define PIN_IMU_SCL 12
   #define PIN_IMU_INT 16
@@ -79,6 +81,8 @@
     #define BATTERY_SHIELD_R2 40.2
   #endif
 #elif BOARD == BOARD_SLIMEVR_LEGACY || BOARD == BOARD_SLIMEVR_DEV
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 4
   #define PIN_IMU_SCL 5
   #define PIN_IMU_INT 10
@@ -96,9 +100,8 @@
     #define BATTERY_SHIELD_R2 40.2
   #endif
 #elif BOARD == BOARD_NODEMCU || BOARD == BOARD_WEMOSD1MINI
-  #define PIN_IMU_SS1 D8
-  #define PIN_IMU_SS2 D10
-  #define PIN_IMU_SS3 D3
+  #define MAX_IMU_COUNT 5
+  #define PIN_IMU_SELECT_LIST {D8, D4, D3, D2, D1}
   #define PIN_IMU_SDA D2
   #define PIN_IMU_SCL D1
   #define PIN_IMU_INT D5
@@ -116,6 +119,8 @@
     #define BATTERY_SHIELD_R2 220
   #endif
 #elif BOARD == BOARD_ESP01
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 2
   #define PIN_IMU_SCL 0
   #define PIN_IMU_INT 255
@@ -124,6 +129,8 @@
   #define LED_PIN LED_OFF
   #define LED_INVERTED false
 #elif BOARD == BOARD_TTGO_TBASE
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 5
   #define PIN_IMU_SCL 4
   #define PIN_IMU_INT 14
@@ -134,6 +141,8 @@
 #elif BOARD == BOARD_CUSTOM
   // Define pins by the examples above
 #elif BOARD == BOARD_WROOM32
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 21
   #define PIN_IMU_SCL 22
   #define PIN_IMU_INT 23
@@ -142,6 +151,8 @@
 //  #define LED_PIN 2
 //  #define LED_INVERTED false
 #elif BOARD == BOARD_LOLIN_C3_MINI
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 5
   #define PIN_IMU_SCL 4
   #define PIN_IMU_INT 6
@@ -150,6 +161,8 @@
   #define LED_PIN 7
 //  #define LED_INVERTED false
 #elif BOARD == BOARD_BEETLE32C3
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 8
   #define PIN_IMU_SCL 9
   #define PIN_IMU_INT 6
@@ -158,6 +171,8 @@
   #define LED_PIN 10
   #define LED_INVERTED false
 #elif BOARD == BOARD_ES32C3DEVKITM1
+  #define MAX_IMU_COUNT 2
+  #define PIN_IMU_SELECT_LIST {}
   #define PIN_IMU_SDA 5
   #define PIN_IMU_SCL 4
   #define PIN_IMU_INT 6
