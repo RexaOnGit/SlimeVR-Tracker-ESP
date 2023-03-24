@@ -98,10 +98,11 @@ void BMI160Sensor::motionSetup() {
         addr,
         BMI160_GYRO_RATE,
         BMI160_GYRO_RANGE,
-        BMI160_GYRO_FILTER_MODE,
+        //BMI160_GYRO_FILTER_MODE
         BMI160_ACCEL_RATE,
         BMI160_ACCEL_RANGE,
-        BMI160_ACCEL_FILTER_MODE
+        //BMI160_ACCEL_FILTER_MODE
+        BMI160_SPI_INTF
     );
     #if !USE_6_AXIS
         #if BMI160_MAG_TYPE == BMI160_MAG_TYPE_HMC
@@ -859,7 +860,8 @@ void BMI160Sensor::maybeCalibrateGyro() {
         imu.waitForGyroDrdy();
 
         int16_t gx, gy, gz;
-        imu.getRotation(&gx, &gy, &gz);
+        int16_t data[3] = {gx,gy,gz};
+        imu.getRotation(data);
         rawGxyz[0] += gx;
         rawGxyz[1] += gy;
         rawGxyz[2] += gz;
@@ -940,7 +942,8 @@ void BMI160Sensor::maybeCalibrateAccel() {
         m_Logger.info("Waiting for position %i, you can leave the device as is...", numPositionsRecorded + 1);
         while (true) {
             int16_t ax, ay, az;
-            imu.getAcceleration(&ax, &ay, &az);
+            int16_t data[3] = {ax, ay, az};
+            imu.getAcceleration(data);
             sensor_real_t scaled[3];
             scaled[0] = ax * BMI160_ASCALE;
             scaled[1] = ay * BMI160_ASCALE;
@@ -1086,14 +1089,16 @@ void BMI160Sensor::remapMagnetometer(sensor_real_t* x, sensor_real_t* y, sensor_
 
 void BMI160Sensor::getRemappedRotation(int16_t* x, int16_t* y, int16_t* z) {
     int16_t gx, gy, gz;
-    imu.getRotation(&gx, &gy, &gz);
+    int16_t data[3] = {gx, gy, gz};
+    imu.getRotation(data);
     *x = BMI160_REMAP_AXIS_X(gx, gy, gz);
     *y = BMI160_REMAP_AXIS_Y(gx, gy, gz);
     *z = BMI160_REMAP_AXIS_Z(gx, gy, gz);
 }
 void BMI160Sensor::getRemappedAcceleration(int16_t* x, int16_t* y, int16_t* z) {
     int16_t ax, ay, az;
-    imu.getAcceleration(&ax, &ay, &az);
+    int16_t data[3] = {ax, ay, az};
+    imu.getAcceleration(data);
     *x = BMI160_REMAP_AXIS_X(ax, ay, az);
     *y = BMI160_REMAP_AXIS_Y(ax, ay, az);
     *z = BMI160_REMAP_AXIS_Z(ax, ay, az);

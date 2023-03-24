@@ -29,6 +29,7 @@
 #include "magneto1.4.h"
 
 #include <BMI160.h>
+#include <DFRobot_BMI160.h>
 #include <vqf.h>
 #include <basicvqf.h>
 #include "../motionprocessing/types.h"
@@ -204,7 +205,7 @@ class BMI160Sensor : public Sensor {
 
         bool getTemperature(float* out);
     private:
-        BMI160 imu {};
+        DFRobot_BMI160 imu {};
 
         Mahony<sensor_real_t> mahony;
 #if !BMI160_VQF_REST_DETECTION_AVAILABLE
