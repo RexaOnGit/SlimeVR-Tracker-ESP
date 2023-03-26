@@ -21,8 +21,8 @@
     THE SOFTWARE.
 */
 
-#ifndef SLIMEVR_SENSORMANAGERSPI
-#define SLIMEVR_SENSORMANAGERSPI
+#ifndef SLIMEVR_SENSORMANAGER
+#define SLIMEVR_SENSORMANAGER
 
 #include "globals.h"
 #include "sensor.h"
@@ -33,32 +33,30 @@ namespace SlimeVR
 {
     namespace Sensors
     {
-        class SensorManagerSPI
+        class SensorManager
         {
         public:
-            SensorManagerSPI()
-                : m_Logger(SlimeVR::Logging::Logger("SensorManagerSPI"))
-                {
-                for (int i = 0; i < MAX_IMU_COUNT; i++) {
-                    m_Sensors[i] = new EmptySensor(0);
-                } 
-                }
-            ~SensorManagerSPI()
+            SensorManager()
+                : m_Logger(SlimeVR::Logging::Logger("SensorManager")), m_Sensor1(new EmptySensor(0)), m_Sensor2(new EmptySensor(0)) {}
+            ~SensorManager()
             {
-                delete *m_Sensors;
+                delete m_Sensor1;
+                delete m_Sensor2;
             }
 
             void setup();
             void postSetup();
 
             void update();
-            
-            Sensor * getSensors() { return *m_Sensors; };
+
+            Sensor *getFirst() { return m_Sensor1; };
+            Sensor *getSecond() { return m_Sensor2; };
 
         private:
             SlimeVR::Logging::Logger m_Logger;
 
-            Sensor *m_Sensors[MAX_IMU_COUNT];
+            Sensor *m_Sensor1;
+            Sensor *m_Sensor2;
         };
     }
 }

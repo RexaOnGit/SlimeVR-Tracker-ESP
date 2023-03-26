@@ -31,70 +31,70 @@
 void BMI160Sensor::initHMC(BMI160MagRate magRate) {
     /* Configure MAG interface and setup mode */
     /* Set MAG interface normal power mode */
-    imu.setRegister(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);
+    imu->setRegister(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);
     delay(60);
 
-    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
-    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
-    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
-    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
-    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
+    imu->setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
+    imu->setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
+    imu->setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
+    imu->setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
+    imu->setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
 
     /* Enable MAG interface */
-    imu.setRegister(BMI160_RA_IF_CONF, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
+    imu->setRegister(BMI160_RA_IF_CONF, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
     delay(1);
 
-    imu.setMagDeviceAddress(HMC_DEVADDR);
+    imu->setMagDeviceAddress(HMC_DEVADDR);
     delay(3);
-    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_SETUP_MODE);
+    imu->setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_SETUP_MODE);
     delay(3);
 
     /* Configure HMC5883L Sensor */
-    imu.setMagRegister(HMC_RA_CFGA, HMC_CFGA_DATA_RATE_75 | HMC_CFGA_AVG_SAMPLES_8 | HMC_CFGA_BIAS_NORMAL);
-    imu.setMagRegister(HMC_RA_CFGB, HMC_CFGB_GAIN_1_30);
-    imu.setMagRegister(HMC_RA_MODE, HMC_MODE_HIGHSPEED | HMC_MODE_READ_CONTINUOUS);
+    imu->setMagRegister(HMC_RA_CFGA, HMC_CFGA_DATA_RATE_75 | HMC_CFGA_AVG_SAMPLES_8 | HMC_CFGA_BIAS_NORMAL);
+    imu->setMagRegister(HMC_RA_CFGB, HMC_CFGB_GAIN_1_30);
+    imu->setMagRegister(HMC_RA_MODE, HMC_MODE_HIGHSPEED | HMC_MODE_READ_CONTINUOUS);
 
-    imu.setRegister(BMI160_RA_MAG_IF_2_READ_RA, HMC_RA_DATA);
-    imu.setRegister(BMI160_RA_MAG_CONF, magRate);
+    imu->setRegister(BMI160_RA_MAG_IF_2_READ_RA, HMC_RA_DATA);
+    imu->setRegister(BMI160_RA_MAG_CONF, magRate);
     delay(3);
-    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_DATA_MODE_6);
+    imu->setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_DATA_MODE_6);
 }
 
 void BMI160Sensor::initQMC(BMI160MagRate magRate) {
     /* Configure MAG interface and setup mode */
     /* Set MAG interface normal power mode */
-    imu.setRegister(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);
+    imu->setRegister(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);
     delay(60);
 
-    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
-    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
-    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
-    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
-    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
+    imu->setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
+    imu->setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
+    imu->setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
+    imu->setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
+    imu->setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
 
     /* Enable MAG interface */
-    imu.setRegister(BMI160_RA_IF_CONF, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
+    imu->setRegister(BMI160_RA_IF_CONF, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
     delay(1);
 
-    imu.setMagDeviceAddress(QMC_DEVADDR);
+    imu->setMagDeviceAddress(QMC_DEVADDR);
     delay(3);
-    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_SETUP_MODE);
+    imu->setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_SETUP_MODE);
     delay(3);
 
     /* Configure QMC5883L Sensor */
-    imu.setMagRegister(QMC_RA_RESET, 1);
+    imu->setMagRegister(QMC_RA_RESET, 1);
     delay(3);
-    imu.setMagRegister(QMC_RA_CONTROL, QMC_CFG_MODE_CONTINUOUS | QMC_CFG_ODR_200HZ | QMC_CFG_RNG_8G | QMC_CFG_OSR_512);
+    imu->setMagRegister(QMC_RA_CONTROL, QMC_CFG_MODE_CONTINUOUS | QMC_CFG_ODR_200HZ | QMC_CFG_RNG_8G | QMC_CFG_OSR_512);
 
-    imu.setRegister(BMI160_RA_MAG_IF_2_READ_RA, QMC_RA_DATA);
-    imu.setRegister(BMI160_RA_MAG_CONF, magRate);
+    imu->setRegister(BMI160_RA_MAG_IF_2_READ_RA, QMC_RA_DATA);
+    imu->setRegister(BMI160_RA_MAG_CONF, magRate);
     delay(3);
-    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_DATA_MODE_6);
+    imu->setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_DATA_MODE_6);
 }
 
 void BMI160Sensor::motionSetup() {
     // initialize device
-    imu.initialize(
+    imu->initialize(
         addr,
         BMI160_GYRO_RATE,
         BMI160_GYRO_RANGE,
@@ -102,7 +102,12 @@ void BMI160Sensor::motionSetup() {
         BMI160_ACCEL_RATE,
         BMI160_ACCEL_RANGE,
         //BMI160_ACCEL_FILTER_MODE
-        BMI160_SPI_INTF
+        #ifdef COM_SPI
+            BMI160_SPI_INTF
+        #endif
+        #ifdef COM_I2C
+            BMI160_I2C_INTF
+        #endif
     );
     #if !USE_6_AXIS
         #if BMI160_MAG_TYPE == BMI160_MAG_TYPE_HMC
@@ -113,14 +118,16 @@ void BMI160Sensor::motionSetup() {
             static_assert(false, "Mag is enabled but BMI160_MAG_TYPE not set in defines");
         #endif
     #endif
-
-    if (!imu.testConnection()) {
-        m_Logger.fatal("Can't connect to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu.getDeviceID(), addr);
+    
+    Serial.print("before test con\n");
+    if (!imu->testConnection()) {
+        Serial.print("after test con\n");
+        m_Logger.fatal("Can't connect to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu->getDeviceID(), addr);
         ledManager.pattern(50, 50, 200);
         return;
     }
 
-    m_Logger.info("Connected to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu.getDeviceID(), addr);
+    m_Logger.info("Connected to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu->getDeviceID(), addr);
 
     // Initialize the configuration
     {
@@ -223,18 +230,18 @@ void BMI160Sensor::motionSetup() {
     m_Logger.info("Calibration data for mag: %s", isMagCalibrated ? "found" : "not found");
     #endif
 
-    imu.setFIFOHeaderModeEnabled(true);
-    imu.setGyroFIFOEnabled(true);
-    imu.setAccelFIFOEnabled(true);
+    imu->setFIFOHeaderModeEnabled(true);
+    imu->setGyroFIFOEnabled(true);
+    imu->setAccelFIFOEnabled(true);
     #if !USE_6_AXIS
         imu.setMagFIFOEnabled(true);
     #endif
     delay(4);
-    imu.resetFIFO();
+    imu->resetFIFO();
     delay(2);
 
     uint8_t err;
-    if (imu.getErrReg(&err)) {
+    if (imu->getErrReg(&err)) {
         if (err & BMI160_ERR_MASK_CHIP_NOT_OPERABLE) {
             m_Logger.fatal("Fatal error: chip not operable");
             return;
@@ -270,7 +277,7 @@ void BMI160Sensor::motionLoop() {
 
             const uint32_t nextLocalTime1 = micros();
             uint32_t rawSensorTime;
-            if (imu.getSensorTime(&rawSensorTime)) {
+            if (imu->getSensorTime(&rawSensorTime)) {
                 localTime0 = localTime1;
                 localTime1 = nextLocalTime1;
                 syncLatencyMicros = (micros() - localTime1) * 0.3;
@@ -438,7 +445,7 @@ void BMI160Sensor::motionLoop() {
 }
 
 void BMI160Sensor::readFIFO() {
-    if (!imu.getFIFOCount(&fifo.length)) {
+    if (!imu->getFIFOCount(&fifo.length)) {
         #if BMI160_DEBUG
             numFIFOFailedReads++;
         #endif
@@ -450,11 +457,11 @@ void BMI160Sensor::readFIFO() {
         #if BMI160_DEBUG
             numFIFODropped++;
         #endif
-        imu.resetFIFO();
+        imu->resetFIFO();
         return;
     }
     std::fill(fifo.data, fifo.data + fifo.length, 0);
-    if (!imu.getFIFOBytes(fifo.data, fifo.length)) {
+    if (!imu->getFIFOBytes(fifo.data, fifo.length)) {
         #if BMI160_DEBUG
             numFIFOFailedReads++;
         #endif
@@ -714,7 +721,7 @@ bool BMI160Sensor::getTemperature(float* out) {
     // Temperature per step from -41 + 1/2^9 degrees C (0x8001) to 87 - 1/2^9 degrees C (0x7FFF)
     constexpr float TEMP_STEP = 128. / 65535;
     int16_t temp;
-    if (imu.getTemperature(&temp)) {
+    if (imu->getTemperature(&temp)) {
         *out = (temp * TEMP_STEP) + BMI160_ZERO_TEMP_OFFSET;
         return true;
     }
@@ -844,7 +851,7 @@ void BMI160Sensor::maybeCalibrateGyro() {
         m_Logger.trace("Calibration temperature: %f", temperature);
     #endif
 
-    if (!imu.getGyroDrdy()) {
+    if (!imu->getGyroDrdy()) {
         m_Logger.error("Fatal error: gyroscope drdy = 0 (dead?)");
         return;
     }
@@ -857,11 +864,11 @@ void BMI160Sensor::maybeCalibrateGyro() {
         GYRO_CALIBRATION_DURATION_SEC / (BMI160_ODR_GYR_MICROS / 1e6);
     int32_t rawGxyz[3] = {0};
     for (int i = 0; i < gyroCalibrationSamples; i++) {
-        imu.waitForGyroDrdy();
+        imu->waitForGyroDrdy();
 
         int16_t gx, gy, gz;
         int16_t data[3] = {gx,gy,gz};
-        imu.getRotation(data);
+        imu->getRotation(data);
         rawGxyz[0] += gx;
         rawGxyz[1] += gy;
         rawGxyz[2] += gz;
@@ -943,7 +950,7 @@ void BMI160Sensor::maybeCalibrateAccel() {
         while (true) {
             int16_t ax, ay, az;
             int16_t data[3] = {ax, ay, az};
-            imu.getAcceleration(data);
+            imu->getAcceleration(data);
             sensor_real_t scaled[3];
             scaled[0] = ax * BMI160_ASCALE;
             scaled[1] = ay * BMI160_ASCALE;
@@ -1090,7 +1097,7 @@ void BMI160Sensor::remapMagnetometer(sensor_real_t* x, sensor_real_t* y, sensor_
 void BMI160Sensor::getRemappedRotation(int16_t* x, int16_t* y, int16_t* z) {
     int16_t gx, gy, gz;
     int16_t data[3] = {gx, gy, gz};
-    imu.getRotation(data);
+    imu->getRotation(data);
     *x = BMI160_REMAP_AXIS_X(gx, gy, gz);
     *y = BMI160_REMAP_AXIS_Y(gx, gy, gz);
     *z = BMI160_REMAP_AXIS_Z(gx, gy, gz);
@@ -1098,7 +1105,7 @@ void BMI160Sensor::getRemappedRotation(int16_t* x, int16_t* y, int16_t* z) {
 void BMI160Sensor::getRemappedAcceleration(int16_t* x, int16_t* y, int16_t* z) {
     int16_t ax, ay, az;
     int16_t data[3] = {ax, ay, az};
-    imu.getAcceleration(data);
+    imu->getAcceleration(data);
     *x = BMI160_REMAP_AXIS_X(ax, ay, az);
     *y = BMI160_REMAP_AXIS_Y(ax, ay, az);
     *z = BMI160_REMAP_AXIS_Z(ax, ay, az);

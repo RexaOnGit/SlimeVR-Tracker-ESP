@@ -21,7 +21,10 @@
     THE SOFTWARE.
 */
 
-#include "SensorManagerSPI.h"
+#include "globals.h"
+#ifdef COM_SPI
+
+#include "SensorManager.h"
 #include <SPI.h>
 #include "network/network.h"
 #include "bno055sensor.h"
@@ -36,42 +39,58 @@ namespace SlimeVR
 {
     namespace Sensors
     {
-        void SensorManagerSPI::setup()
+        void SensorManager::setup()
         {
             {
 
+pinMode(D8, OUTPUT);  ///TEMP
+pinMode(D3, OUTPUT);  ///TEMP
+
+SPI.begin();
+
 //check what SPI devices exist
 int ssPins[] = PIN_IMU_SELECT_LIST;
-byte IMUIDs[MAX_IMU_COUNT];
-for (int i = 0; i < MAX_IMU_COUNT; i++) {
+byte IMUIDs[m_Sensors.size()];
+for (uint8_t i = 0; i < m_Sensors.size(); i++) {
     byte response = 0;
     SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
     digitalWrite(ssPins[i], LOW);
-    response = SPI.transfer(0x00);
+    SPI.transfer(0x7F | 0x80);
+    response = SPI.transfer(0x00 | 0x80);
     digitalWrite(ssPins[i], HIGH);
     SPI.endTransaction();
+    Serial.print(response, HEX);
+    Serial.print("\n");
     #if IMU == IMU_BMI160
-        if (response == BMI160_RA_CHIP_ID) {
+        if ((response == BMI160_CHIP_ID) | (response == 0x00)) {
             IMUIDs[i] = response;
         }
         else {
-            IMUIDs[i] = -1;
+            IMUIDs[i] = 0xFF;
         }
     #else
     #error Unsupported IMU
     #endif
 }
+
 //step through each device ID, creating a new sensor object for each valid one
-for (int i = 0; i < MAX_IMU_COUNT; i++) {
+for (uint8_t i = 0; i < m_Sensors.size(); i++) {
     byte thisID = IMUIDs[i];
     if (thisID == 0) {
-        m_Logger.debug("No IMU connected at position " + (i+1));
+        String message = "No IMU connected at position " + String((i+1), DEC);
+        m_Logger.debug(message.c_str());
+        continue;
     }
-    else if (thisID == -1) {
-        m_Sensors[i] = new ErroneousSensor(0, IMU);
+    else if (thisID == BMI160_CHIP_ID) {
+        String message = "BMI160 connected at position " + String((i+1), DEC);
+        m_Logger.debug(message.c_str());
+        m_Sensors[i] = (std::make_unique<BMI160Sensor>(i, (i+1), IMU_ROTATION));
+
     }
     else {
-        m_Sensors[i] = new BMI160Sensor(0, (i+1), IMU_ROTATION);
+        String message = "Invalid sensor at position " + String((i+1), DEC);
+        m_Logger.debug(message.c_str());
+        m_Sensors[i] = (std::make_unique<ErroneousSensor>(i, IMU));
     }
     m_Sensors[i]->motionSetup();
 }
@@ -79,29 +98,31 @@ for (int i = 0; i < MAX_IMU_COUNT; i++) {
             }
         }
 
-        void SensorManagerSPI::postSetup()
+        void SensorManager::postSetup()
         {
-            for (Sensor *i : m_Sensors) {
+            for (const auto& i : m_Sensors) {
                 i->postSetup();
             }
         }
 
-        void SensorManagerSPI::update()
+        void SensorManager::update()
         {
             // Gather IMU data
-            for (Sensor *i : m_Sensors) {
+            for (const auto& i : m_Sensors) {
                 i->motionLoop();
             }
-
             if (!ServerConnection::isConnected())
             {
                 return;
             }
 
             // Send updates
-            for (Sensor *i : m_Sensors) {
+            for (const auto& i : m_Sensors) {
                 i->sendData();
             }
+
         }
     }
 }
+
+#endif // COM_SPI

@@ -25,6 +25,9 @@
 #include "packets.h"
 #include "logging/Logger.h"
 #include "GlobalVars.h"
+#include "sensors/SensorManager.h"
+
+using SlimeVR::Sensors::SensorManager;
 
 #define TIMEOUT 3000UL
 
@@ -283,7 +286,7 @@ void Network::sendError(uint8_t reason, uint8_t sensorId) {
 }
 
 // PACKET_SENSOR_INFO 15
-void Network::sendSensorInfo(Sensor sensor) {
+void Network::sendSensorInfo(Sensor& sensor) {
     if(!connected)
     {
         return;
@@ -551,7 +554,7 @@ void returnLastPacket(int len) {
     }
 }
 
-void updateSensorState(Sensor sensor) {
+void updateSensorState(Sensor& sensor) {
     if(millis() - lastSensorInfoPacket > 1000) {
         lastSensorInfoPacket = millis();
         if(sensorStateNotified != sensor.getSensorState())
@@ -571,7 +574,7 @@ void ServerConnection::connect()
         if (packetSize)
         {
             // receive incoming UDP packets
-            Udp.read(incomingPacket, sizeof(incomingPacket));
+            int len = Udp.read(incomingPacket, sizeof(incomingPacket));
             
 #ifdef DEBUG_NETWORK
             udpClientLogger.trace("Received %d bytes from %s, port %d", packetSize, Udp.remoteIP().toString().c_str(), Udp.remotePort());
@@ -622,7 +625,7 @@ void ServerConnection::resetConnection() {
     statusManager.setStatus(SlimeVR::Status::SERVER_CONNECTING, true);
 }
 
-void ServerConnection::update(Sensor sensor) {
+void ServerConnection::update(Sensor& sensor) {
     if(connected) {
         int packetSize = Udp.parsePacket();
         if (packetSize)

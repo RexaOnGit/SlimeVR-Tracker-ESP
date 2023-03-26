@@ -21,6 +21,9 @@
     THE SOFTWARE.
 */
 
+#include "globals.h"
+#ifdef COM_I2C
+
 #include "SensorManager.h"
 #include <i2cscan.h>
 #include "network/network.h"
@@ -143,3 +146,5 @@ namespace SlimeVR
         }
     }
 }
+
+#endif // COM_I2C

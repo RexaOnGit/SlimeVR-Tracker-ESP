@@ -30,6 +30,10 @@
 #include "defines_bmi160.h"
 #include "defines_sensitivity.h"
 
+#ifndef IMU_COM_PROTOCOL
+#define IMU_COM_PROTOCOL COM_I2C
+#endif
+
 #ifndef SECOND_IMU
 #define SECOND_IMU IMU
 #endif

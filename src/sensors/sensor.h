@@ -47,6 +47,10 @@ public:
     }
 
     virtual ~Sensor(){};
+    // Make this class MOVE ONLY -- always behind unique pointer
+    Sensor(const Sensor& other) = delete;
+    Sensor& operator=(const Sensor& other) = delete;
+
     virtual void motionSetup(){};
     virtual void postSetup(){};
     virtual void motionLoop(){};

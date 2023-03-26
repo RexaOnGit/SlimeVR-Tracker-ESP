@@ -28,9 +28,11 @@
 #include "udpclient.h"
 #include "packets.h"
 #include "wifiprovisioning.h"
+#include "sensors/SensorManager.h"
 
 namespace Network {
-    void update(Sensor sensor);
+    void update(SlimeVR::Sensors::SensorManager& sensorManager);
+
     void setUp();
 }
 

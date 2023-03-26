@@ -21,6 +21,9 @@
     THE SOFTWARE.
 */
 #include "network.h"
+#include "sensors/SensorManager.h"
+
+using SlimeVR::Sensors::SensorManager;
 
 bool lastWifiConnected = false;
 
@@ -28,14 +31,17 @@ void Network::setUp() {
     WiFiNetwork::setUp();
 }
 
-void Network::update(Sensor sensor) {
+void Network::update(SensorManager& sensorManager) {
     WiFiNetwork::upkeep();
     if(WiFiNetwork::isConnected()) {
         if(lastWifiConnected == false) {
             lastWifiConnected = true;
             ServerConnection::resetConnection(); // WiFi was reconnected, reconnect to the server
         }
-        ServerConnection::update(sensor);
+        Sensor& sensor1 = sensorManager.getSensors(0);
+        Sensor& sensor2 = sensorManager.getSensors(1);
+        ServerConnection::update(sensor1);
+        ServerConnection::update(sensor2);
     } else {
         lastWifiConnected = false;
     }

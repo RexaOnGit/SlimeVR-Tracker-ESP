@@ -33,6 +33,7 @@
 #include <vqf.h>
 #include <basicvqf.h>
 #include "../motionprocessing/types.h"
+#include <memory>
 
 #include "../motionprocessing/GyroTemperatureCalibrator.h"
 #include "../motionprocessing/RestDetection.h"
@@ -152,6 +153,7 @@ class BMI160Sensor : public Sensor {
     public:
         BMI160Sensor(uint8_t id, uint8_t address, float rotation) :
             Sensor("BMI160Sensor", IMU_BMI160, id, address, rotation)
+
 #if !BMI160_VQF_REST_DETECTION_AVAILABLE
             , restDetection(restDetectionParams, BMI160_ODR_GYR_MICROS / 1e6f, BMI160_ODR_ACC_MICROS / 1e6f)
 #endif
@@ -164,6 +166,7 @@ class BMI160Sensor : public Sensor {
 #endif
 #endif
         {
+           // imu = std::make_unique<DFRobot_BMI160>();
         };
         ~BMI160Sensor(){};
         void initHMC(BMI160MagRate magRate);
@@ -205,7 +208,7 @@ class BMI160Sensor : public Sensor {
 
         bool getTemperature(float* out);
     private:
-        DFRobot_BMI160 imu {};
+        std::unique_ptr<DFRobot_BMI160> imu;
 
         Mahony<sensor_real_t> mahony;
 #if !BMI160_VQF_REST_DETECTION_AVAILABLE

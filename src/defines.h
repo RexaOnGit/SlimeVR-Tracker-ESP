@@ -31,7 +31,13 @@
 #define BOARD BOARD_WEMOSD1MINI
 #define IMU_ROTATION DEG_270
 #define SECOND_IMU_ROTATION DEG_270
-#define IMU_COM_PROTOCOL SPI_COM
+#define IMU_COM_PROTOCOL COM_SPI
+
+#if IMU_COM_PROTOCOL == COM_SPI
+#define COM_SPI
+#elif IMU_COM_PROTOCOL == COM_I2C
+#define COM_I2C
+#endif
 
 // Battery monitoring options (comment to disable):
 //   BAT_EXTERNAL for ADC pin, 
@@ -100,8 +106,8 @@
     #define BATTERY_SHIELD_R2 40.2
   #endif
 #elif BOARD == BOARD_NODEMCU || BOARD == BOARD_WEMOSD1MINI
-  #define MAX_IMU_COUNT 5
-  #define PIN_IMU_SELECT_LIST {D8, D4, D3, D2, D1}
+  #define MAX_IMU_COUNT 4
+  #define PIN_IMU_SELECT_LIST {D8, D3, D2, D1}
   #define PIN_IMU_SDA D2
   #define PIN_IMU_SCL D1
   #define PIN_IMU_INT D5

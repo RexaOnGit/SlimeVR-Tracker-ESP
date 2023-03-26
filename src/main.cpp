@@ -24,7 +24,6 @@
 #include "Wire.h"
 #include "ota.h"
 #include "sensors/SensorManager.h"
-#include "sensors/SensorManagerSPI.h"
 #include "configuration/Configuration.h"
 #include "network/network.h"
 #include "globals.h"
@@ -37,11 +36,7 @@
 #include "logging/Logger.h"
 
 SlimeVR::Logging::Logger logger("SlimeVR");
-#if IMU_COM_PROTOCOL == SPI_COM
-    SlimeVR::Sensors::SensorManagerSPI sensorManager;
-#else
-    SlimeVR::Sensors::SensorManager sensorManager;
-#endif
+SlimeVR::Sensors::SensorManager sensorManager;
 SlimeVR::LEDManager ledManager(LED_PIN);
 SlimeVR::Status::StatusManager statusManager;
 SlimeVR::Configuration::Configuration configuration;
@@ -76,7 +71,7 @@ void setup()
 
     SerialCommands::setUp();
 
-#if IMU_COM_PROTOCOL == I2C_COM
+#ifdef COM_I2C
     #if IMU == IMU_MPU6500 || IMU == IMU_MPU6050 || IMU == IMU_MPU9250 || IMU == IMU_BNO055 || IMU == IMU_ICM20948 || IMU == IMU_BMI160
             I2CSCAN::clearBus(PIN_IMU_SDA, PIN_IMU_SCL); // Make sure the bus isn't stuck when resetting ESP without powering it down
             // Fixes I2C issues for certain IMUs. Only has been tested on IMUs above. Testing advised when adding other IMUs.
@@ -98,9 +93,11 @@ void setup()
         Wire.setTimeOut(150);
     #endif
     Wire.setClock(I2C_SPEED);
-#elif IMU_COM_PROTOCOL == SPI_COM
+#endif
+#ifdef COM_SPI
     //set all the slave select pins high to force devices into SPI mode
     for (uint8_t pin : PIN_IMU_SELECT_LIST) {
+        pinMode(pin, OUTPUT);
         digitalWrite(pin, HIGH);
     }
 #endif
@@ -125,11 +122,12 @@ void loop()
 {
     SerialCommands::update();
     OTA::otaUpdate();
-    Sensor *sensors = sensorManager.getSensors();
-    for (int i = 0; i < MAX_IMU_COUNT; i++) {
-        Sensor sensor = sensors[i];
-        Network::update(sensor);
-    }
+    std::vector<std::unique_ptr<Sensor>> sensors;
+    Network::update(sensorManager);
+    // for (uint8_t i = 0; i < sensors.size(); i++) {
+    //     std::unique_ptr<Sensor> sensor = std::move(sensors[i]);
+    //     if (sensor->isWorking()) Network::update(std::move(sensor));
+    // }
     sensorManager.update();
     battery.Loop();
     ledManager.update();
