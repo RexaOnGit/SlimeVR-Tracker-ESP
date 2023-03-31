@@ -31,22 +31,22 @@
 void BMI160Sensor::initHMC(BMI160MagRate magRate) {
     /* Configure MAG interface and setup mode */
     /* Set MAG interface normal power mode */
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_AUX_NORMAL_MODE);
+    imu.setRegister(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);
     delay(60);
 
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_EN_PULL_UP_REG_1);
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_EN_PULL_UP_REG_2);
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_EN_PULL_UP_REG_3);
-    imu.setRegister(BMI160_SPI_COMM_TEST_ADDR, BMI160_EN_PULL_UP_REG_4);
-    imu.setRegister(BMI160_SPI_COMM_TEST_ADDR, BMI160_EN_PULL_UP_REG_5);
+    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
+    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
+    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
+    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
+    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
 
     /* Enable MAG interface */
-    imu.setRegister(BMI160_IF_CONF_ADDR, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
+    imu.setRegister(BMI160_RA_IF_CONF, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
     delay(1);
 
     imu.setMagDeviceAddress(HMC_DEVADDR);
     delay(3);
-    imu.setRegister(BMI160_AUX_IF_1_ADDR, BMI160_MAG_SETUP_MODE);
+    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_SETUP_MODE);
     delay(3);
 
     /* Configure HMC5883L Sensor */
@@ -54,31 +54,31 @@ void BMI160Sensor::initHMC(BMI160MagRate magRate) {
     imu.setMagRegister(HMC_RA_CFGB, HMC_CFGB_GAIN_1_30);
     imu.setMagRegister(HMC_RA_MODE, HMC_MODE_HIGHSPEED | HMC_MODE_READ_CONTINUOUS);
 
-    imu.setRegister(BMI160_AUX_IF_2_ADDR, HMC_RA_DATA);
-    imu.setRegister(BMI160_AUX_ODR_ADDR, magRate);
+    imu.setRegister(BMI160_RA_MAG_IF_2_READ_RA, HMC_RA_DATA);
+    imu.setRegister(BMI160_RA_MAG_CONF, magRate);
     delay(3);
-    imu.setRegister(BMI160_AUX_IF_1_ADDR, BMI160_MAG_DATA_MODE_6);
+    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_DATA_MODE_6);
 }
 
 void BMI160Sensor::initQMC(BMI160MagRate magRate) {
     /* Configure MAG interface and setup mode */
     /* Set MAG interface normal power mode */
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_AUX_NORMAL_MODE);
+    imu.setRegister(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);
     delay(60);
 
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_EN_PULL_UP_REG_1);
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_EN_PULL_UP_REG_2);
-    imu.setRegister(BMI160_COMMAND_REG_ADDR, BMI160_EN_PULL_UP_REG_3);
-    imu.setRegister(BMI160_SPI_COMM_TEST_ADDR, BMI160_EN_PULL_UP_REG_4);
-    imu.setRegister(BMI160_SPI_COMM_TEST_ADDR, BMI160_EN_PULL_UP_REG_5);
+    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
+    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
+    imu.setRegister(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
+    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
+    imu.setRegister(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
 
     /* Enable MAG interface */
-    imu.setRegister(BMI160_IF_CONF_ADDR, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
+    imu.setRegister(BMI160_RA_IF_CONF, BMI160_IF_CONF_MODE_PRI_AUTO_SEC_MAG);
     delay(1);
 
     imu.setMagDeviceAddress(QMC_DEVADDR);
     delay(3);
-    imu.setRegister(BMI160_AUX_IF_1_ADDR, BMI160_MAG_SETUP_MODE);
+    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_SETUP_MODE);
     delay(3);
 
     /* Configure QMC5883L Sensor */
@@ -86,22 +86,22 @@ void BMI160Sensor::initQMC(BMI160MagRate magRate) {
     delay(3);
     imu.setMagRegister(QMC_RA_CONTROL, QMC_CFG_MODE_CONTINUOUS | QMC_CFG_ODR_200HZ | QMC_CFG_RNG_8G | QMC_CFG_OSR_512);
 
-    imu.setRegister(BMI160_AUX_IF_2_ADDR, QMC_RA_DATA);
-    imu.setRegister(BMI160_AUX_ODR_ADDR, magRate);
+    imu.setRegister(BMI160_RA_MAG_IF_2_READ_RA, QMC_RA_DATA);
+    imu.setRegister(BMI160_RA_MAG_CONF, magRate);
     delay(3);
-    imu.setRegister(BMI160_AUX_IF_1_ADDR, BMI160_MAG_DATA_MODE_6);
+    imu.setRegister(BMI160_RA_MAG_IF_1_MODE, BMI160_MAG_DATA_MODE_6);
 }
 
 void BMI160Sensor::motionSetup() {
     // initialize device
-    int8_t result = imu.setSensorConfig(
+    imu.initialize(
         addr,
-        BMI160_ACCEL_RATE,
-        BMI160_ACCEL_RANGE,
-        BMI160_ACCEL_FILTER_MODE,
         BMI160_GYRO_RATE,
         BMI160_GYRO_RANGE,
-        BMI160_GYRO_FILTER_MODE
+        BMI160_GYRO_FILTER_MODE,
+        BMI160_ACCEL_RATE,
+        BMI160_ACCEL_RANGE,
+        BMI160_ACCEL_FILTER_MODE
     );
     #if !USE_6_AXIS
         #if BMI160_MAG_TYPE == BMI160_MAG_TYPE_HMC
@@ -113,13 +113,13 @@ void BMI160Sensor::motionSetup() {
         #endif
     #endif
 
-    if (!(result == BMI160_OK)) {
-        m_Logger.fatal("Can't connect to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu.getChipID(), addr);
+    if (!imu.testConnection()) {
+        m_Logger.fatal("Can't connect to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu.getDeviceID(), addr);
         ledManager.pattern(50, 50, 200);
         return;
     }
 
-    m_Logger.info("Connected to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu.getChipID(), addr);
+    m_Logger.info("Connected to BMI160 (reported device ID 0x%02x) at address 0x%02x", imu.getDeviceID(), addr);
 
     // Initialize the configuration
     {
@@ -233,8 +233,7 @@ void BMI160Sensor::motionSetup() {
     delay(2);
 
     uint8_t err;
-    result = imu.getErrorRegister(&err);
-    if (result == BMI160_OK) {
+    if (imu.getErrReg(&err)) {
         if (err & BMI160_ERR_MASK_CHIP_NOT_OPERABLE) {
             m_Logger.fatal("Fatal error: chip not operable");
             return;
@@ -270,8 +269,7 @@ void BMI160Sensor::motionLoop() {
 
             const uint32_t nextLocalTime1 = micros();
             uint32_t rawSensorTime;
-            int8_t result = imu.getSensorTime(&rawSensorTime);
-            if (result == BMI160_OK) {
+            if (imu.getSensorTime(&rawSensorTime)) {
                 localTime0 = localTime1;
                 localTime1 = nextLocalTime1;
                 syncLatencyMicros = (micros() - localTime1) * 0.3;
@@ -439,7 +437,7 @@ void BMI160Sensor::motionLoop() {
 }
 
 void BMI160Sensor::readFIFO() {
-    if (!(imu.getFIFOLength(&fifo.length) == BMI160_OK)) {
+    if (!imu.getFIFOCount(&fifo.length)) {
         #if BMI160_DEBUG
             numFIFOFailedReads++;
         #endif
@@ -455,7 +453,7 @@ void BMI160Sensor::readFIFO() {
         return;
     }
     std::fill(fifo.data, fifo.data + fifo.length, 0);
-    if (!(imu.getFIFOBytes(fifo.data, fifo.length) == BMI160_OK)) {
+    if (!imu.getFIFOBytes(fifo.data, fifo.length)) {
         #if BMI160_DEBUG
             numFIFOFailedReads++;
         #endif
@@ -481,16 +479,16 @@ void BMI160Sensor::readFIFO() {
         header = fifo.data[i] & 0b11111100;
         i++;
         
-        if (header == BMI160_FIFO_HEAD_SKIP_FRAME) {
-            BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_SKIP_FRAME_LENGTH);
+        if (header == BMI160_FIFO_HEADER_CTL_SKIP_FRAME) {
+            BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_SKIP_FRAME_LEN);
             break;
-        } else if (header == BMI160_FIFO_HEAD_SENSOR_TIME) {
-            BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_SENSOR_TIME_LENGTH);
-            i += BMI160_FIFO_SENSOR_TIME_LENGTH;
-        } else if (header == BMI160_FIFO_HEAD_INPUT_CONFIG) {
-            BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_INPUT_CONFIG_LENGTH);
-            i += BMI160_FIFO_INPUT_CONFIG_LENGTH;
-        } else if (header & BMI160_FIFO_HEAD_OVER_READ) {
+        } else if (header == BMI160_FIFO_HEADER_CTL_SENSOR_TIME) {
+            BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_SENSOR_TIME_LEN);
+            i += BMI160_FIFO_SENSOR_TIME_LEN;
+        } else if (header == BMI160_FIFO_HEADER_CTL_INPUT_CONFIG) {
+            BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_INPUT_CONFIG_LEN);
+            i += BMI160_FIFO_INPUT_CONFIG_LEN;
+        } else if (header & BMI160_FIFO_HEADER_DATA_FRAME_BASE) {
             if (!(header & BMI160_FIFO_HEADER_DATA_FRAME_MASK_HAS_DATA)) {
                 break;
             }
@@ -502,34 +500,34 @@ void BMI160Sensor::readFIFO() {
 
             // mag
             if (header & BMI160_FIFO_HEADER_DATA_FRAME_FLAG_M) {
-                BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_M_LENGTH);
+                BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_M_LEN);
                 #if !USE_6_AXIS
                     getMagnetometerXYZFromBuffer(&fifo.data[i], &mx, &my, &mz);
                     mnew = true;
                 #endif
-                i += BMI160_FIFO_M_LENGTH;
+                i += BMI160_FIFO_M_LEN;
             }
             
             // bmi160 -> 0 lsb 1 msb
             // gyro
             if (header & BMI160_FIFO_HEADER_DATA_FRAME_FLAG_G) {
-                BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_G_LENGTH);
+                BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_G_LEN);
                 gx = ((int16_t)fifo.data[i + 1] << 8) | fifo.data[i + 0];
                 gy = ((int16_t)fifo.data[i + 3] << 8) | fifo.data[i + 2];
                 gz = ((int16_t)fifo.data[i + 5] << 8) | fifo.data[i + 4];
                 gnew = true;
-                i += BMI160_FIFO_G_LENGTH;
+                i += BMI160_FIFO_G_LEN;
             }
 
             // bmi160 -> 0 lsb 1 msb
             // accel
             if (header & BMI160_FIFO_HEADER_DATA_FRAME_FLAG_A) {
-                BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_A_LENGTH);
+                BMI160_FIFO_FRAME_ENSURE_BYTES_AVAILABLE(BMI160_FIFO_A_LEN);
                 ax = ((int16_t)fifo.data[i + 1] << 8) | fifo.data[i + 0];
                 ay = ((int16_t)fifo.data[i + 3] << 8) | fifo.data[i + 2];
                 az = ((int16_t)fifo.data[i + 5] << 8) | fifo.data[i + 4];
                 anew = true;
-                i += BMI160_FIFO_A_LENGTH;
+                i += BMI160_FIFO_A_LEN;
             }
 
             // gyro callback updates fusion and must be last
@@ -715,8 +713,7 @@ bool BMI160Sensor::getTemperature(float* out) {
     // Temperature per step from -41 + 1/2^9 degrees C (0x8001) to 87 - 1/2^9 degrees C (0x7FFF)
     constexpr float TEMP_STEP = 128. / 65535;
     int16_t temp;
-    int8_t result = imu.getTemperature(&temp);
-    if (result == BMI160_OK) {
+    if (imu.getTemperature(&temp)) {
         *out = (temp * TEMP_STEP) + BMI160_ZERO_TEMP_OFFSET;
         return true;
     }
@@ -846,7 +843,7 @@ void BMI160Sensor::maybeCalibrateGyro() {
         m_Logger.trace("Calibration temperature: %f", temperature);
     #endif
 
-    if (!imu.getGyroDirty()) {
+    if (!imu.getGyroDrdy()) {
         m_Logger.error("Fatal error: gyroscope drdy = 0 (dead?)");
         return;
     }
@@ -859,13 +856,13 @@ void BMI160Sensor::maybeCalibrateGyro() {
         GYRO_CALIBRATION_DURATION_SEC / (BMI160_ODR_GYR_MICROS / 1e6);
     int32_t rawGxyz[3] = {0};
     for (int i = 0; i < gyroCalibrationSamples; i++) {
-        imu.waitForGyroDirty();
+        imu.waitForGyroDrdy();
 
-        int16_t* gyroData = {0};
-        imu.getSensorData(imu.onlyGyro, gyroData);
-        rawGxyz[0] += gyroData[0];
-        rawGxyz[1] += gyroData[1];
-        rawGxyz[2] += gyroData[2];
+        int16_t gx, gy, gz;
+        imu.getRotation(&gx, &gy, &gz);
+        rawGxyz[0] += gx;
+        rawGxyz[1] += gy;
+        rawGxyz[2] += gz;
     }
     ledManager.off();
     m_Calibration.G_off[0] = ((double)rawGxyz[0]) / gyroCalibrationSamples;
@@ -942,12 +939,12 @@ void BMI160Sensor::maybeCalibrateAccel() {
         m_Logger.info("Gathering accelerometer data...");
         m_Logger.info("Waiting for position %i, you can leave the device as is...", numPositionsRecorded + 1);
         while (true) {
-            int16_t* accelData = {0};
-            imu.getSensorData(imu.onlyAccel, accelData);
+            int16_t ax, ay, az;
+            imu.getAcceleration(&ax, &ay, &az);
             sensor_real_t scaled[3];
-            scaled[0] = accelData[0] * BMI160_ASCALE;
-            scaled[1] = accelData[1] * BMI160_ASCALE;
-            scaled[2] = accelData[2] * BMI160_ASCALE;
+            scaled[0] = ax * BMI160_ASCALE;
+            scaled[1] = ay * BMI160_ASCALE;
+            scaled[2] = az * BMI160_ASCALE;
 
             calibrationRestDetection.updateAcc(BMI160_ODR_ACC_MICROS, scaled);
 
@@ -961,9 +958,9 @@ void BMI160Sensor::maybeCalibrateAccel() {
             
             if (calibrationRestDetection.getRestDetected()) {
                 const uint16_t i = numCurrentPositionSamples * 3;
-                accelCalibrationChunk[i + 0] = accelData[0];
-                accelCalibrationChunk[i + 1] = accelData[0];
-                accelCalibrationChunk[i + 2] = accelData[0];
+                accelCalibrationChunk[i + 0] = ax;
+                accelCalibrationChunk[i + 1] = ay;
+                accelCalibrationChunk[i + 2] = az;
                 numCurrentPositionSamples++;
 
                 if (numCurrentPositionSamples >= numSamplesPerPosition) {
@@ -1088,22 +1085,15 @@ void BMI160Sensor::remapMagnetometer(sensor_real_t* x, sensor_real_t* y, sensor_
 }
 
 void BMI160Sensor::getRemappedRotation(int16_t* x, int16_t* y, int16_t* z) {
-    int16_t* gyroData = new int16_t[3];
-    imu.getSensorData(imu.onlyGyro, gyroData);
-    int16_t gx = gyroData[0];
-    int16_t gy = gyroData[1];
-    int16_t gz = gyroData[2];
+    int16_t gx, gy, gz;
+    imu.getRotation(&gx, &gy, &gz);
     *x = BMI160_REMAP_AXIS_X(gx, gy, gz);
     *y = BMI160_REMAP_AXIS_Y(gx, gy, gz);
     *z = BMI160_REMAP_AXIS_Z(gx, gy, gz);
 }
 void BMI160Sensor::getRemappedAcceleration(int16_t* x, int16_t* y, int16_t* z) {
-    int16_t* accelData = new int16_t[3];
-    imu.getSensorData(imu.onlyAccel, accelData);
-    Serial.print("after get sensor data\n");
-    int16_t ax = accelData[0];
-    int16_t ay = accelData[1];
-    int16_t az = accelData[2];
+    int16_t ax, ay, az;
+    imu.getAcceleration(&ax, &ay, &az);
     *x = BMI160_REMAP_AXIS_X(ax, ay, az);
     *y = BMI160_REMAP_AXIS_Y(ax, ay, az);
     *z = BMI160_REMAP_AXIS_Z(ax, ay, az);
