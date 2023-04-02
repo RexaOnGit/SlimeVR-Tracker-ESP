@@ -16,6 +16,8 @@ class ImuComManager {
         ImuComManager() = delete;
         ~ImuComManager() {}
 
+        virtual void setup();
+
         virtual int8_t readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes);
         virtual int8_t writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes);
 
