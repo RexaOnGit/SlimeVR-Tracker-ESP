@@ -19,8 +19,8 @@ class ImuComManager {
         virtual int8_t readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes);
         virtual int8_t writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes);
 
-        virtual void getBitFromByte(uint8_t* byte, uint8_t bitPosition, uint8_t* bit);
-        virtual void setBitInByte(uint8_t* byte, uint8_t bitPosition, uint8_t bit);
+        virtual void readBitFromByte(uint8_t* byte, uint8_t bitPosition, uint8_t* bit);
+        virtual void writeBitInByte(uint8_t* byte, uint8_t bitPosition, uint8_t bit);
 
     protected:
         enum transferStatus status = imu_ok;
