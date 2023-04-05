@@ -8,11 +8,14 @@ Abstracts reading and writing of IMU registers into general class
 
 class ImuI2cManager : public ImuComManager {
     public:
+        ImuI2cManager() {}
+        ~ImuI2cManager() {}
+
         /** Initilize member variables of the ImuI2cManager. Call this before using other methods.
          * @param devAddress I2C device address
          * @param timeout Optional I2C timeout in ms. 0 to disable, leave off for default
          */
-        void ImuI2cManager::setup(uint8_t device_address, uint16_t time_out = 1000) {
+        void setup(uint8_t device_address, uint16_t time_out = 1000) {
             deviceAddress = device_address;
             if (time_out != 1000) {
                 timeOut = time_out;
@@ -25,11 +28,10 @@ class ImuI2cManager : public ImuComManager {
          * @param outBytes pointer for getting the read bytes
          * @return I2C read status. imu_ok(0) means success 
          */
-        int8_t ImuI2cManager::readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes) {
-            if (i2c.readBytes(deviceAddress, startAddress, length, buffer) == -1) {
+        int8_t readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes) {
+            if (i2c.readBytes(deviceAddress, startAddress, length, outBytes) == -1) {
                 status = imu_transfer_failed;
             } else {
-                outBytes = buffer;
                 status = imu_ok;
             }
             return status;
@@ -41,7 +43,7 @@ class ImuI2cManager : public ImuComManager {
          * @param inBytes pointer for passing bytes to write
          * @return I2C read status. imu_ok(0) means success
          */
-        int8_t ImuI2cManager::writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes) {
+        int8_t writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes) {
             if (i2c.writeBytes(deviceAddress, startAddress, length, inBytes) == -1) {
                 status = imu_transfer_failed;
             } else {
@@ -55,7 +57,7 @@ class ImuI2cManager : public ImuComManager {
          * @param bitPosition which bit to read
          * @param bit pointer for getting the read bit
          */
-        void ImuI2cManager::readBitFromByte(uint8_t* byte, uint8_t bitPosition, uint8_t* bit) {
+        void readBitFromByte(uint8_t* byte, uint8_t bitPosition, uint8_t* bit) {
             *bit = ((*byte >> bitPosition) & 0x01);
         }
 
@@ -64,7 +66,7 @@ class ImuI2cManager : public ImuComManager {
          * @param bitPosition which bit to change
          * @param bit bit value to write
          */
-        void ImuI2cManager::writeBitInByte(uint8_t* byte, uint8_t bitPosition, uint8_t bit) {
+        void writeBitInByte(uint8_t* byte, uint8_t bitPosition, uint8_t bit) {
             *byte &= (~0x01 << bitPosition);
             *byte |= (bit << bitPosition);
         }

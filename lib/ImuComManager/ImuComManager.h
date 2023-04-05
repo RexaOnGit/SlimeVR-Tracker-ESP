@@ -6,6 +6,8 @@ Abstracts reading and writing of IMU registers into general class
 #ifndef IMU_COM_MANAGER
 #define IMU_COM_MANAGER
 
+#include <Arduino.h>
+
 enum transferStatus : int8_t {
     imu_ok = 0,
     imu_transfer_failed
@@ -13,9 +15,6 @@ enum transferStatus : int8_t {
 
 class ImuComManager {
     public:
-        ImuComManager() = delete;
-        ~ImuComManager() {}
-
         virtual void setup();
 
         virtual int8_t readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes);
@@ -25,8 +24,9 @@ class ImuComManager {
         virtual void writeBitInByte(uint8_t* byte, uint8_t bitPosition, uint8_t bit);
 
     protected:
+        ImuComManager() {}
+        ~ImuComManager() {}    
         enum transferStatus status = imu_ok;
-        uint8_t buffer[8];
 
     private:
 

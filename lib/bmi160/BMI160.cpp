@@ -4,11 +4,11 @@ BMI160 Library built for SlimeVR - class file
 
 #include "bmi160.h"
 
-class BMI160 : public BMI160 {
-    public:
-        void BMI160::setup() {
-            
-        }
+namespace BMI160{
 
-    private:
+    void BMI160::setup() {
+
+    }
+
 }
+
