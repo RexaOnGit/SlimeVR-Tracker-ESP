@@ -5,10 +5,13 @@ BMI160 Library built for SlimeVR - header file
 #ifndef _BMI160_H_
 #define _BMI160_H_
 
+// Add this define to use SPI
+//#define BMI160_SPI
+
 #include <Arduino.h>
 #include <any>
-#include "ImuI2cManager.h"
-#include "ImuSpiManager.h"
+#include "I2c.h"
+#include "SpiCom.h"
 
 // BMI160 Register Table
 
@@ -109,11 +112,6 @@ namespace BMI160{
         Hz3200
     };
 
-    enum class BMI160ComProtocol : int8_t {
-        I2C = 0,
-        SPI
-    };
-
     enum class BMI160ComStatus : int8_t {
         OK = 0,
         FAIL
@@ -124,7 +122,7 @@ namespace BMI160{
             BMI160() {}
             ~BMI160() {}
 
-            BMI160ComStatus setup(BMI160ComProtocol comProtocol, uint8_t comAddress);
+            BMI160ComStatus setup(uint8_t comAddress);
 
             int8_t getChipID();
 
@@ -158,7 +156,12 @@ namespace BMI160{
             BMI160ComStatus setupI2C(uint8_t i2cAddress);
             BMI160ComStatus setupSPI(uint8_t selectPin);
 
-            std::any comManager;
+            #ifdef BMI160_SPI
+                ImuComManager::SpiCom comManager;
+            #else
+                ImuComManager::I2c comManager;
+            #endif
+
     };
 } // namespace BMI160
 

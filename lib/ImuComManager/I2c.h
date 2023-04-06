@@ -3,17 +3,18 @@ IMU Communication Library built for SlimeVR - I2C header file
 Abstracts reading and writing of IMU registers into general class
 */
 
+#ifndef I2C
+#define I2C
+
 #include "ImuComManager.h"
-#include "I2Cdev.h"
+#include <I2Cdev.h>
 
 namespace ImuComManager {
 
-    using S = ComStatus;
-
-    class ImuI2cManager : public ImuComManager{
+    class I2c : public ImuComManager{
         public:
-            ImuI2cManager() {}
-            ~ImuI2cManager() {}
+            I2c() {}
+            ~I2c() {}
 
             /** Initilize member variables of the ImuI2cManager. 
              * Call this before using other methods.
@@ -33,11 +34,11 @@ namespace ImuComManager {
              * @param outBytes pointer for getting the read bytes
              * @return I2C read status. imu_ok(0) means success 
              */
-            S readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes) {
+            ComStatus readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes) {
                 if (i2c.readBytes(deviceAddress, startAddress, length, outBytes) == -1) {
-                    status = S::FAILED;
+                    status = ComStatus::FAILED;
                 } else {
-                    status = S::OK;
+                    status = ComStatus::OK;
                 }
                 return status;
             }
@@ -48,11 +49,11 @@ namespace ImuComManager {
              * @param inBytes pointer for passing bytes to write
              * @return I2C read status. imu_ok(0) means success
              */
-            S writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes) {
+            ComStatus writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes) {
                 if (i2c.writeBytes(deviceAddress, startAddress, length, inBytes) != true) {
-                    status = S::FAILED;
+                    status = ComStatus::FAILED;
                 } else {
-                    status = S::OK;
+                    status = ComStatus::OK;
                 }
                 return status;
             }
@@ -82,4 +83,6 @@ namespace ImuComManager {
             uint16_t timeOut = i2c.readTimeout;
     };
 } // namespace ImuComManager
+
+#endif // I2C
 

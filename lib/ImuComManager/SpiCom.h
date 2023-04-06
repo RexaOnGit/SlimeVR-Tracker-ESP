@@ -3,17 +3,18 @@ IMU Communication Library built for SlimeVR - SPI header file
 Abstracts reading and writing of IMU registers into general class
 */
 
+#ifndef SPI_COM
+#define SPI_COM
+
 #include "ImuComManager.h"
 #include <SPI.h>
 
 namespace ImuComManager {
 
-    using S = ComStatus;
-
-    class ImuSpiManager : public ImuComManager {
+    class SpiCom : public ImuComManager {
         public:
-            ImuSpiManager() {}
-            ~ImuSpiManager() {}
+            SpiCom() {}
+            ~SpiCom() {}
 
             /** Initialize member variables of the ImuSpiManager. Call this before using other methods.
              * @param select_pin chip select pin to use for this instance
@@ -40,12 +41,12 @@ namespace ImuComManager {
              * @param outBytes pointer for getting the read bytes
              * @return SPI read status. imu_ok(0) means success
              */
-            S readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes) {
+            ComStatus readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes) {
                 readBytes(startAddress, length, outBytes);
                 return status;
             }
 
-            S writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes) {
+            ComStatus writeToRegisters(uint8_t startAddress, uint8_t length, uint8_t* inBytes) {
                 writeBytes(startAddress, length, inBytes);
                 return status;
             }
@@ -71,7 +72,7 @@ namespace ImuComManager {
                 digitalWrite(selectPin, LOW);
 
                 //Perform transfers
-                status = S::OK;
+                status = ComStatus::OK;
                 for (int i = 0; i < length; i++) {
                     buffer[i] = SPI.transfer((start_address & readMask) + i);
                 }
@@ -89,7 +90,7 @@ namespace ImuComManager {
                 digitalWrite(selectPin, LOW);
 
                 //Perform transfers
-                status = S::OK;
+                status = ComStatus::OK;
                 for (int i = 0; i < length; i++) {
                     SPI.transfer16(word((start_address & writeMask) + i, bytes[i]));
                 }
@@ -106,4 +107,6 @@ namespace ImuComManager {
             uint8_t writeMask;
     };
 }
+
+#endif // SPI_COM
 
