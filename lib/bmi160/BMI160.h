@@ -108,12 +108,22 @@ namespace BMI160{
         Hz3200
     };
 
+    enum class BMI160ComProtocol : int8_t {
+        I2C = 0,
+        SPI
+    };
+
+    enum class BMI160ComStatus : int8_t {
+        OK = 0,
+        FAIL
+    };
+
     class BMI160 {
         public:
             BMI160() {}
             ~BMI160() {}
 
-        void setup();
+            BMI160ComStatus setup(BMI160ComProtocol comProtocol, uint8_t comAddress);
 
             int8_t getChipID();
 
@@ -143,8 +153,12 @@ namespace BMI160{
 
         protected:
 
+            BMI160ComStatus setupI2C(uint8_t i2cAddress);
+            BMI160ComStatus setupSPI(uint8_t selectPin);
+
         private:
     };
-}
+} // namespace BMI160
+
 #endif // _BMI160_H_
 
