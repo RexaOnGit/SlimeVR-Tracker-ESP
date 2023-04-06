@@ -35,6 +35,8 @@
 #include "batterymonitor.h"
 #include "logging/Logger.h"
 
+#include <bmi160.h> //temp
+
 SlimeVR::Logging::Logger logger("SlimeVR");
 SlimeVR::Sensors::SensorManager sensorManager;
 SlimeVR::LEDManager ledManager(LED_PIN);
