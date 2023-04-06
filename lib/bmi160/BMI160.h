@@ -6,6 +6,7 @@ BMI160 Library built for SlimeVR - header file
 #define _BMI160_H_
 
 #include <Arduino.h>
+#include <any>
 #include "ImuI2cManager.h"
 #include "ImuSpiManager.h"
 
@@ -153,10 +154,11 @@ namespace BMI160{
 
         protected:
 
+        private:
             BMI160ComStatus setupI2C(uint8_t i2cAddress);
             BMI160ComStatus setupSPI(uint8_t selectPin);
 
-        private:
+            std::any comManager;
     };
 } // namespace BMI160
 

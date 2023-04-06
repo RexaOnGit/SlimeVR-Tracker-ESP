@@ -18,6 +18,9 @@ namespace ImuComManager {
 
     class ImuComManager {
         public:
+            ImuComManager() {}
+            ~ImuComManager() {}   
+
             virtual void setup();
 
             virtual ComStatus readFromRegisters(uint8_t startAddress, uint8_t length, uint8_t* outBytes);
@@ -27,8 +30,6 @@ namespace ImuComManager {
             virtual void writeBitInByte(uint8_t* byte, uint8_t bitPosition, uint8_t bit);
 
         protected:
-            ImuComManager() {}
-            ~ImuComManager() {}    
             enum ComStatus status = ComStatus::OK;
 
         private:
